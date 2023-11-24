@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  author: robertdebock
+  author: Adfinis
   role_name: bareos_sd
   description: Install and configure [Bareos](https://www.bareos.com/) Storage Daemon.
   license: Apache-2.0
