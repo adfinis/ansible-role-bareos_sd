@@ -106,12 +106,14 @@
   loop: "{{ bareos_sd_s3_profiles }}"
   loop_control:
     label: "{{ item.name }}"
+  when:
+    - bareos_sd_s3_profiles | length > 0
   notify:
     - Check configuration
     - Restart bareos-sd
 
-- name: Start bareos-sd
+- name: Start and enable bareos-sd service
   ansible.builtin.service:
     name: bareos-sd
     state: started
-    enabled: yes
+    enabled: true
