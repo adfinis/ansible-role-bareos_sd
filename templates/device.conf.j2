@@ -2,6 +2,11 @@
 
 {% if item.enabled is defined and item.enabled or item.enabled is not defined %}
 Device {
+{% if item.count is defined %}
+  # multiply this device Count times
+  Count = {{ item.count }}
+
+{% endif %}
   Name = "{{ item.name }}"
 {% if item.description is defined %}
   Description = "{{ item.description }}"
@@ -17,12 +22,13 @@ Device {
 {% if item.device_options is defined %}
   Device Options = "{{ item.device_options }}"
 {% endif %}
-  LabelMedia = {{ item.label_media | ternary('yes', 'No') }}
-  Random Access = {{ item.random_access | ternary('yes', 'No') }}
-  AutomaticMount = {{ item.automatic_mount | ternary('yes', 'No') }}
-  RemovableMedia = {{ item.removable_media | ternary('yes', 'No') }}
-  AlwaysOpen = {{ item.always_open | ternary('yes', 'No') }}
-  Autochanger = {{ item.autochanger | ternary('yes', 'No') }}
+  AlwaysOpen = {{ item.always_open | default(true) | ternary('yes', 'No') }}
+  Autochanger = {{ item.autochanger | default(false) | ternary('yes', 'No') }}
+  AutomaticMount = {{ item.automatic_mount | default(false) | ternary('yes', 'No') }}
+  AutoSelect = {{ item.auto_select | default(true) | ternary('yes', 'No') }}
+  LabelMedia = {{ item.label_media | default(false) | ternary('yes', 'No') }}
+  Random Access = {{ item.random_access | default(false) | ternary('yes', 'No') }}
+  RemovableMedia = {{ item.removable_media | default(true) | ternary('yes', 'No') }}
 }
 {% else %}
 # This file is not enabled.

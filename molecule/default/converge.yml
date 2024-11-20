@@ -22,6 +22,19 @@
           autochanger: true
         - name: "disabled-device"
           enabled: false
+        - name: Count_Device
+          count: 10
+          media_type: "File"
+          archive_device: "/var/lib/bareos/storage"
+          label_media: false
+          removable_media: true
+          maximum_concurrent_jobs: 55
+          label_media: true
+          random_access: true
+          automatic_mount: true
+          removable_media: false
+          always_open: false
+          auto_select: true
       bareos_sd_directors:
         - name: bareos-dir
           password: "somepassword"

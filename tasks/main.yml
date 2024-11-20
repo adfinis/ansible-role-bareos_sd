@@ -135,7 +135,6 @@
     - Check configuration
     - Restart bareos-sd
 
-
 - name: Start and enable bareos-sd service
   ansible.builtin.service:
     name: bareos-sd
