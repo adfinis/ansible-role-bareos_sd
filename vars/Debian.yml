@@ -1,0 +1,5 @@
+---
+
+bareos_sd_debug_packages:
+  - bareos-dbg
+  - gdb

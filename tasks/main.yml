@@ -1,10 +1,17 @@
 ---
 # tasks file for bareos_sd
 
+- name: Include OS-specific vars
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_facts.distribution }}_{{ ansible_facts.distribution_major_version }}.yml"
+    - "{{ ansible_facts.os_family }}.yml"
+    - main.yml  # fallback
+
 - name: Import assert.yml
   ansible.builtin.import_tasks:
     file: assert.yml
-  run_once: yes
+  run_once: true
   delegate_to: localhost
 
 - name: Install packages
@@ -74,7 +81,7 @@
     - Check configuration
     - Restart bareos-sd
 
-- name: Install bareos-storage-droplet.
+- name: Install bareos-storage-droplet
   ansible.builtin.package:
     name: bareos-storage-droplet
   when:
@@ -100,12 +107,36 @@
   loop: "{{ bareos_sd_s3_profiles }}"
   loop_control:
     label: "{{ item.name }}"
+  when:
+    - bareos_sd_s3_profiles | length > 0
   notify:
     - Check configuration
     - Restart bareos-sd
 
-- name: Start bareos-sd
+- name: Place Autochanger
+  ansible.builtin.template:
+    src: autochanger.conf.j2
+    dest: /etc/bareos/bareos-sd.d/autochanger/{{ item.name }}.conf
+    owner: bareos
+    group: bareos
+    mode: "0600"
+    backup: "{{ bareos_sd_backup_configurations }}"
+  loop: "{{ bareos_sd_autochangers }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when:
+    - bareos_sd_autochangers is iterable
+    - bareos_sd_autochangers | length > 0
+    - item.name is defined
+    - item.changer_device is defined
+    - item.devices is defined
+    - item.devices | length > 0
+  notify:
+    - Check configuration
+    - Restart bareos-sd
+
+- name: Start and enable bareos-sd service
   ansible.builtin.service:
     name: bareos-sd
     state: started
-    enabled: yes
+    enabled: true
