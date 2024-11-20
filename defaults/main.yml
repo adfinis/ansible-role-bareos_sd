@@ -35,3 +35,7 @@ bareos_sd_messages: []
 
 # A list of S3 profiles to configure.
 bareos_sd_s3_profiles: []
+
+# A list of autochangers to configure.
+# https://docs.bareos.org/Configuration/StorageDaemon.html#autochanger-resource
+bareos_sd_autochangers: []

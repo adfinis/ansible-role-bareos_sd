@@ -22,6 +22,7 @@ Device {
   AutomaticMount = {{ item.automatic_mount | ternary('yes', 'No') }}
   RemovableMedia = {{ item.removable_media | ternary('yes', 'No') }}
   AlwaysOpen = {{ item.always_open | ternary('yes', 'No') }}
+  Autochanger = {{ item.autochanger | ternary('yes', 'No') }}
 }
 {% else %}
 # This file is not enabled.

@@ -47,6 +47,35 @@ argument_specs:
         type: "list"
         default: []
         description: "A list of S3 profiles to configure."
+      bareos_sd_autochangers:
+        type: "list"
+        default: []
+        description: >-
+          A list of Autochangers to configure.
+          https://docs.bareos.org/Configuration/StorageDaemon.html#autochanger-resource
+        elements: "dict"
+        options:
+          name:
+            type: "str"
+            required: true
+          changer_device:
+            type: "str"
+            required: true
+          changer_command:
+            type: "str"
+            required: true
+          devices:
+            type: "list"
+            elements: "str"
+            required: true
+            description: >-
+              Using "list", as Autochangers support multiple devices.
+              https://docs.bareos.org/Configuration/StorageDaemon.html#config-Sd_Autochanger_Device
+          description:
+            type: "list"
+            required: false
+
+
       bareos_sd_install_debug_packages:
         type: "bool"
         default: no
