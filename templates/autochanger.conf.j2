@@ -1,0 +1,13 @@
+{{ ansible_managed | comment }}
+
+Autochanger {
+  Name = "{{ item.name }}"
+  Changer Device = {{ item.changer_device }}
+  Changer Command = "{{ item.changer_command }}"
+{% for device in item.devices %}
+  Device = {{ device }}
+{% endfor %}
+{% if item.description is defined %}
+  Description = "{{ item.description }}"
+{% endif %}
+}
