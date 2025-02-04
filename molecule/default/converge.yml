@@ -7,7 +7,7 @@
   roles:
     - role: ansible-role-bareos_sd
       bareos_sd_backup_configurations: true
-      bareos_sd_install_debug_packages: true
+      bareos_sd_install_debug_packages: false
       bareos_sd_devices:
         - name: "FileStorage"
           description: "File device. A connecting Director must have the same Name and MediaType."
