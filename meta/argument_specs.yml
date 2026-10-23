@@ -9,7 +9,7 @@ argument_specs:
     options:
       bareos_sd_backup_configurations:
         type: "bool"
-        default: no
+        default: false
         description: "Backup the configuration files."
       bareos_sd_hostname:
         type: "str"
@@ -25,11 +25,11 @@ argument_specs:
         description: "The amount of jobs to run concurrently."
       bareos_sd_tls_enable:
         type: "bool"
-        default: yes
+        default: true
         description: "Enable TLS."
       bareos_sd_tls_verify_peer:
         type: "bool"
-        default: no
+        default: false
         description: "Verify the peer."
       bareos_sd_devices:
         type: "list"
@@ -75,8 +75,70 @@ argument_specs:
             type: "list"
             required: false
 
-
       bareos_sd_install_debug_packages:
         type: "bool"
-        default: no
+        default: false
         description: "Install debug packages. This requires the debug repositories to be enabled."
+
+      bareos_sd_s3_use_versitygw:
+        type: "bool"
+        default: false
+
+      bareos_sd_s3_backends:
+        default: []
+        type: "list"
+        elements: "dict"
+        options:
+          name:
+            type: "str"
+            required: true
+          bucket:
+            type: "str"
+            required: true
+          enabled:
+            type: "bool"
+            default: true
+          access_key:
+            type: "str"
+            required: true
+          secret_key:
+            type: "str"
+            required: true
+          port:
+            type: "int"
+            required: true
+          https_enabled:
+            type: "bool"
+            default: false
+          host:
+            type: "str"
+            default: "127.0.0.1"
+          host_bucket:
+            type: "str"
+            default: "127.0.0.1"
+          use_versitygw:
+            type: "bool"
+            default: false
+          service_name: 
+            type: "str"
+          azure_account_name: 
+            type: "str"
+          azure_access_key: 
+            type: "str"
+          device_settings:
+            type: "dict"
+            options:
+              iothreads:
+                type: "int"
+                default: 4
+              ioslots:
+                type: "int"
+                default: 2
+              chunksize:
+                type: "int"
+                default: 262146024
+              device_program:
+                type: "str"
+                default: "s3cmd-wrapper.sh"
+              
+

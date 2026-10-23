@@ -1,0 +1,7 @@
+{{ ansible_managed | comment }}
+[default]
+access_key = {{ item.access_key }}
+secret_key = {{ item.secret_key }}
+host_base = {{ item.host | default('127.0.0.1') }}:{{ item.port }}
+host_bucket = {{ item.host_bucket | default('127.0.0.1') }}:{{ item.port }}
+use_https = {{ item.https_enabled | default(false) | ternary('True', 'False') }}

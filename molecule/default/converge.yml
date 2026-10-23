@@ -79,3 +79,21 @@
             - FileStorage
           description: >-
             Molecule Autoscaler
+
+      bareos_sd_s3_backends:
+        - name: molecule_s3
+          enabled: true
+          access_key:
+          secret_key:
+          port: 7001
+
+        - name: molecule_s3_azure
+          enabled: true
+          access_key:
+          secret_key:
+          port: 7002
+          azure_account_name: molecule_azure
+          azure_access_key: 
+
+        
+

@@ -135,6 +135,13 @@
     - Check configuration
     - Restart bareos-sd
 
+- name: Import S3 tasks
+  ansible.builtin.import_tasks:
+    file: s3.yml
+  when:
+    - bareos_sd_s3_backends is defined
+    - bareos_sd_s3_backends is iterable
+
 - name: Start and enable bareos-sd service
   ansible.builtin.service:
     name: bareos-sd

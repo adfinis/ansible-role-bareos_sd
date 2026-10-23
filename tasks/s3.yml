@@ -1,0 +1,67 @@
+---
+
+- name: s3 | Install s3cmd and dplcompat
+  ansible.builtin.package:
+    name:
+      - bareos-storage-dplcompat
+      - s3cmd
+
+- name: s3 | Configure s3cmd
+  ansible.builtin.template:
+    src: s3cfg.j2
+    dest: "/etc/bareos/s3cfg-{{ item.name }}"
+    owner: bareos
+    group: bareos
+    mode: "0644"
+  loop: "{{ bareos_sd_s3_backends }}"
+
+- name: s3 | Import S3 VersityGW tasks
+  ansible.builtin.import_tasks:
+    file: s3_versitygw.yml
+  when:
+    - bareos_sd_s3_use_versitygw is defined
+    - bareos_sd_s3_use_versitygw
+
+# dynamically generate a device for each S3 backend, so they don't need to be defined manually
+- name: s3 | Pre-process Bareos S3 devices list
+  ansible.builtin.set_fact:
+    _processed_s3_backends: >-
+      {{
+        _processed_s3_backends | default([]) + [
+          item | combine({
+            'name': item.device_name | default('Device_S3_' ~ item.name),
+            'device_options': _opts,
+            'device_type': 'dplcompat',
+            'media_type': 'dplcompat-' ~ item.name,
+            'archive_device': 'S3 Object Storage',
+            'label_media': true,
+            'random_access': true,
+            'always_open': false,
+            'removable_media': false,
+            'automatic_mount': false
+          })
+        ]
+      }}
+  loop: "{{ bareos_sd_s3_backends }}"
+  vars:
+    # based on https://github.com/bareos/bareos/discussions/2063
+    _opts: |-
+      iothreads={{ (item.device_settings | default({})).iothreads | default('4') }}"
+                         ",ioslots={{ (item.device_settings | default({})).ioslots | default('2') }}"
+                         ",chunksize={{ (item.device_settings | default({})).chunksize | default('262144000') }}"
+                         ",program={{ (item.device_settings | default({})).program | default('s3cmd-wrapper.sh') }}"
+                         ",s3cfg=/etc/bareos/s3cfg-{{ item.name }}"
+                         ",bucket={{ item.bucket }}
+
+- name: s3 | Deploy Bareos devices for each S3 backend
+  ansible.builtin.template:
+    src: device.conf.j2
+    dest: "/etc/bareos/bareos-sd.d/device/{{ item.device_name | default('Device_S3_' ~ item.name) }}.conf"
+    owner: bareos
+    group: bareos
+    mode: "0640"
+    backup: "{{ bareos_sd_backup_configurations }}"
+  loop: "{{ _processed_s3_backends }}"
+  notify:
+    - Check configuration
+    - Restart bareos-sd
