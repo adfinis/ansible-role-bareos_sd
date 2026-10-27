@@ -80,20 +80,36 @@
           description: >-
             Molecule Autoscaler
 
+      bareos_sd_s3_use_versitygw: true
       bareos_sd_s3_backends:
         - name: molecule_s3
+          bucket: molecule_s3_bucket
           enabled: true
-          access_key:
-          secret_key:
+          access_key: ThisIsAnAccessKeyString
+          secret_key: ThisIsASecretKeyString
+          https_enabled: true
+          host: localhost
+          host_bucket: localhost
           port: 7001
+          bucket: molecule_bucket
+          device_settings:
+            iothreads: 5
+            ioslots: 3
+            chunksize: 262146024
+            device_program: s3cmd-wrapper.sh
 
         - name: molecule_s3_azure
-          enabled: true
-          access_key:
-          secret_key:
+          bucket: molecule_s3_azure_bucket
+          access_key: ThisIsAnAccessKeyString
+          secret_key: ThisIsASecretKeyString
           port: 7002
+          use_versitygw: true
           azure_account_name: molecule_azure
-          azure_access_key: 
+          azure_access_key: ThisIsAnAzureAccessKey
 
-        
-
+        - name: molecule_s3_disabled
+          enabled: false
+          bucket: molecule_s3_disabled_bucket
+          access_key: ThisIsAnAccessKeyString
+          secret_key: ThisIsASecretKeyString
+          port: 7003

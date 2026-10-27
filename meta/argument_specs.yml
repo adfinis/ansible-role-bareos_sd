@@ -119,11 +119,11 @@ argument_specs:
           use_versitygw:
             type: "bool"
             default: false
-          service_name: 
+          service_name:
             type: "str"
-          azure_account_name: 
+          azure_account_name:
             type: "str"
-          azure_access_key: 
+          azure_access_key:
             type: "str"
           device_settings:
             type: "dict"
@@ -140,5 +140,3 @@ argument_specs:
               device_program:
                 type: "str"
                 default: "s3cmd-wrapper.sh"
-              
-

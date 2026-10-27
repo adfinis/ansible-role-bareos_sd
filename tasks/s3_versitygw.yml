@@ -2,7 +2,7 @@
 # We use VersityGW to proxy S3 requests from s3cmd to Azure Blob Storage
 
 - name: s3_versitygw | Install VersityGW (DEB)
-  ansible.builtin.apt: 
+  ansible.builtin.apt:
     deb: "https://github.com/versity/versitygw/releases/download/v{{ bareos_sd_s3_versitygw_version }}/versitygw_{{ bareos_sd_s3_versitygw_version }}_linux_{{ bareos_sd_s3_versitygw_arch }}.deb"
   when:
     - ansible_facts.os_family == "Debian"
