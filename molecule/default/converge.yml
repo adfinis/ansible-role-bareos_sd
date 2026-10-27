@@ -88,9 +88,8 @@
           access_key: ThisIsAnAccessKeyString
           secret_key: ThisIsASecretKeyString
           https_enabled: true
-          host: localhost
-          host_bucket: localhost
-          port: 7001
+          host_base: s3.amazonaws.com
+          host_bucket: "%(bucket)s.s3.amazonaws.com"
           bucket: molecule_bucket
           device_settings:
             iothreads: 5
@@ -102,6 +101,8 @@
           bucket: molecule_s3_azure_bucket
           access_key: ThisIsAnAccessKeyString
           secret_key: ThisIsASecretKeyString
+          host_base: 127.0.0.1
+          host_bucket: 127.0.0.1
           port: 7002
           use_versitygw: true
           azure_account_name: molecule_azure
@@ -112,4 +113,5 @@
           bucket: molecule_s3_disabled_bucket
           access_key: ThisIsAnAccessKeyString
           secret_key: ThisIsASecretKeyString
-          port: 7003
+          host_base: s3.amazonaws.com
+          host_bucket: "%(bucket)s.s3.amazonaws.com"
