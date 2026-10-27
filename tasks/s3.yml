@@ -30,6 +30,7 @@
         _processed_s3_backends | default([]) + [
           item | combine({
             'name': item.device_name | default('Device_S3_' ~ item.name),
+            'enabled': item.enabled | default(true),
             'device_options': _opts,
             'device_type': 'dplcompat',
             'media_type': 'dplcompat-' ~ item.name,
