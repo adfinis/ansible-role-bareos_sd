@@ -33,15 +33,12 @@ bareos_sd_directors: []
 # A list of messages to send to the director.
 bareos_sd_messages: []
 
-# A list of S3 profiles to configure.
-bareos_sd_s3_profiles: []
-
-# A list of autochangers to configure.
 # https://docs.bareos.org/Configuration/StorageDaemon.html#autochanger-resource
 bareos_sd_autochangers: []
+
+# A list of S3 storage backends that are used with dplcompat and s3cmd
+bareos_sd_s3_backends: []
 
 # Settings for Object Storage on Azure with VersityGW to translate S3 to Azure Blob Storage
 bareos_sd_s3_versitygw_version: 1.10.0
 bareos_sd_s3_versitygw_arch: amd64
-
-bareos_sd_s3_backends: []
