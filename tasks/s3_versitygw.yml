@@ -17,6 +17,7 @@
 - name: s3_versitygw | Install VersityGW (Suse)
   community.general.zypper:
     name: "https://github.com/versity/versitygw/releases/download/v{{ bareos_sd_s3_versitygw_version }}/versitygw_{{ bareos_sd_s3_versitygw_version }}_linux_{{ bareos_sd_s3_versitygw_arch }}.rpm"
+    disable_gpg_check: true
   when:
     - ansible_facts.os_family == "Suse"
 
