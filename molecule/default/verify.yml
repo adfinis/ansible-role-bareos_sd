@@ -25,6 +25,6 @@
         that:
           - ansible_facts.services["versitygw@molecule_s3_azure.service"].state == "running"
 
-    - name: Check VersityGW port
+    - name: s3 | Check VersityGW port
       ansible.builtin.wait_for:
         port: 7002

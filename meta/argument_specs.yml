@@ -79,11 +79,26 @@ argument_specs:
       bareos_sd_s3_use_versitygw:
         type: "bool"
         default: false
-        description: >-
+        description: |-
           For object storage implementations that don't support S3 (For example Azure Blob Storage),
           VersityGW will be installed to proxy the S3 requests from s3cmd to the storage backend.
 
           Needs to be enabled per backend in `bareos_sd_s3_backends` with the bool `use_versitygw`.
+
+      bareos_sd_s3_versitygw_version:
+        type: "str"
+        default: "1.10.0"
+        description: "VersityGW version. Only used when VersityGW is enabled with `bareos_sd_s3_use_versitygw`."
+      bareos_sd_s3_versitygw_arch:
+        type: "str"
+        default: "amd64"
+        description: "VersityGW architecture. Only used when VersityGW is enabled with `bareos_sd_s3_use_versitygw`."
+      bareos_sd_s3_versitygw_download_url:
+        type: "str"
+        description: "VersityGW download URL. Only used when VersityGW is enabled with `bareos_sd_s3_use_versitygw`."
+        default: >-
+          https://github.com/versity/versitygw/releases/download/v{{ bareos_sd_s3_versitygw_version }}/
+          versitygw_{{ bareos_sd_s3_versitygw_version }}_linux_{{ bareos_sd_s3_versitygw_arch }}
 
       bareos_sd_s3_backends:
         default: []
