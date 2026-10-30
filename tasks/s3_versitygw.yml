@@ -1,0 +1,43 @@
+---
+# We use VersityGW to proxy S3 requests from s3cmd to Azure Blob Storage
+
+- name: s3_versitygw | Install VersityGW (DEB)
+  ansible.builtin.apt:
+    deb: "{{ bareos_sd_s3_versitygw_download_url }}.deb"
+  when:
+    - ansible_facts.os_family == "Debian"
+
+- name: s3_versitygw | Install VersityGW (RPM)
+  ansible.builtin.dnf:
+    name: "{{ bareos_sd_s3_versitygw_download_url }}.rpm"
+    disable_gpg_check: true
+  when:
+    - ansible_facts.os_family == "RedHat"
+
+- name: s3_versitygw | Install VersityGW (Suse)
+  community.general.zypper:
+    name: "{{ bareos_sd_s3_versitygw_download_url }}.rpm"
+    disable_gpg_check: true
+  when:
+    - ansible_facts.os_family == "Suse"
+
+- name: s3_versitygw | Deploy VersityGW configs
+  ansible.builtin.template:
+    src: versitygw.conf.j2
+    dest: "/etc/versitygw.d/{{ item.name }}.conf"
+    owner: bareos
+    group: bareos
+    mode: "0640"
+  loop: "{{ bareos_sd_s3_backends }}"
+  when:
+    - item.use_versitygw | default(false)
+  notify: Restart VersityGw
+
+- name: s3_versitygw | Enable VersityGW services
+  ansible.builtin.service:
+    name: "versitygw@{{ item.name }}"
+    enabled: "{{ item.enabled | default(true) }}"
+    state: "{{ item.enabled | default(true) | ternary('started', 'stopped') }}"
+  loop: "{{ bareos_sd_s3_backends }}"
+  when:
+    - item.use_versitygw | default(false)

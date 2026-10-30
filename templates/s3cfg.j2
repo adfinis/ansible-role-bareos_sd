@@ -1,0 +1,7 @@
+{{ ansible_managed | comment }}
+[default]
+access_key = {{ item.access_key }}
+secret_key = {{ item.secret_key }}
+host_base = {{ item.host_base }}{% if item.port is defined %}:{{ item.port }}{% endif %}
+host_bucket = {{ item.host_bucket }}{% if item.port is defined %}:{{ item.port }}{% endif %}
+use_https = {{ item.https_enabled | default(false) | ternary('True', 'False') }}

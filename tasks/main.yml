@@ -5,14 +5,9 @@
   ansible.builtin.include_vars: "{{ item }}"
   with_first_found:
     - "{{ ansible_facts.distribution }}_{{ ansible_facts.distribution_major_version }}.yml"
+    - "{{ ansible_facts.distribution }}.yml"
     - "{{ ansible_facts.os_family }}.yml"
     - main.yml  # fallback
-
-- name: Import assert.yml
-  ansible.builtin.import_tasks:
-    file: assert.yml
-  run_once: true
-  delegate_to: localhost
 
 - name: Install packages
   ansible.builtin.package:
@@ -81,38 +76,6 @@
     - Check configuration
     - Restart bareos-sd
 
-- name: Install bareos-storage-droplet
-  ansible.builtin.package:
-    name: bareos-storage-droplet
-  when:
-    - bareos_sd_s3_profiles | length > 0
-
-- name: Create /etc/bareos/bareos-sd.d/device/droplet
-  ansible.builtin.file:
-    path: /etc/bareos/bareos-sd.d/device/droplet
-    state: directory
-    owner: bareos
-    group: bareos
-    mode: "0755"
-  when:
-    - bareos_sd_s3_profiles | length > 0
-
-- name: Place S3 profile
-  ansible.builtin.template:
-    src: s3.profile.j2
-    dest: /etc/bareos/bareos-sd.d/device/droplet/{{ item.name }}.profile
-    owner: bareos
-    group: bareos
-    mode: "0600"
-  loop: "{{ bareos_sd_s3_profiles }}"
-  loop_control:
-    label: "{{ item.name }}"
-  when:
-    - bareos_sd_s3_profiles | length > 0
-  notify:
-    - Check configuration
-    - Restart bareos-sd
-
 - name: Place Autochanger
   ansible.builtin.template:
     src: autochanger.conf.j2
@@ -134,6 +97,13 @@
   notify:
     - Check configuration
     - Restart bareos-sd
+
+- name: Import S3 tasks
+  ansible.builtin.import_tasks:
+    file: s3.yml
+  when:
+    - bareos_sd_s3_backends is defined
+    - bareos_sd_s3_backends is iterable
 
 - name: Start and enable bareos-sd service
   ansible.builtin.service:

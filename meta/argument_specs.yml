@@ -9,7 +9,7 @@ argument_specs:
     options:
       bareos_sd_backup_configurations:
         type: "bool"
-        default: no
+        default: false
         description: "Backup the configuration files."
       bareos_sd_hostname:
         type: "str"
@@ -25,11 +25,11 @@ argument_specs:
         description: "The amount of jobs to run concurrently."
       bareos_sd_tls_enable:
         type: "bool"
-        default: yes
+        default: true
         description: "Enable TLS."
       bareos_sd_tls_verify_peer:
         type: "bool"
-        default: no
+        default: false
         description: "Verify the peer."
       bareos_sd_devices:
         type: "list"
@@ -43,10 +43,6 @@ argument_specs:
         type: "list"
         default: []
         description: "A list of messages to send to the director."
-      bareos_sd_s3_profiles:
-        type: "list"
-        default: []
-        description: "A list of S3 profiles to configure."
       bareos_sd_autochangers:
         type: "list"
         default: []
@@ -75,8 +71,107 @@ argument_specs:
             type: "list"
             required: false
 
-
       bareos_sd_install_debug_packages:
         type: "bool"
-        default: no
+        default: false
         description: "Install debug packages. This requires the debug repositories to be enabled."
+
+      bareos_sd_s3_use_versitygw:
+        type: "bool"
+        default: false
+        description: |-
+          For object storage implementations that don't support S3 (For example Azure Blob Storage),
+          VersityGW will be installed to proxy the S3 requests from s3cmd to the storage backend.
+
+          Needs to be enabled per backend in `bareos_sd_s3_backends` with the bool `use_versitygw`.
+
+      bareos_sd_s3_versitygw_version:
+        type: "str"
+        default: "1.10.0"
+        description: "VersityGW version. Only used when VersityGW is enabled with `bareos_sd_s3_use_versitygw`."
+      bareos_sd_s3_versitygw_arch:
+        type: "str"
+        default: "amd64"
+        description: "VersityGW architecture. Only used when VersityGW is enabled with `bareos_sd_s3_use_versitygw`."
+      bareos_sd_s3_versitygw_download_url:
+        type: "str"
+        description: "VersityGW download URL. Only used when VersityGW is enabled with `bareos_sd_s3_use_versitygw`."
+        default: >-
+          https://github.com/versity/versitygw/releases/download/v{{ bareos_sd_s3_versitygw_version }}/
+          versitygw_{{ bareos_sd_s3_versitygw_version }}_linux_{{ bareos_sd_s3_versitygw_arch }}
+
+      bareos_sd_s3_backends:
+        default: []
+        type: "list"
+        elements: "dict"
+        options:
+          name:
+            type: "str"
+            required: true
+            description: >-
+              Name of S3 storage backend. Will be used dynamically in file names.
+          bucket:
+            type: "str"
+            required: true
+            description: "S3 bucket name"
+          enabled:
+            type: "bool"
+            default: true
+          access_key:
+            type: "str"
+            required: true
+            description: "s3cmd access_key "
+          secret_key:
+            type: "str"
+            required: true
+            description: "s3cmd secret_key "
+          port:
+            type: "int"
+            required: false
+            description: >-
+              If S3 backend uses a custom port, or when used with VersityGW (VGW_PORT).
+          https_enabled:
+            type: "bool"
+            default: false
+          host_base:
+            type: "str"
+            required: true
+            description: >-
+              s3cmd host_base address. If a custom port is used, it can be appended with the parameter `port`.
+          host_bucket:
+            type: "str"
+            required: true
+            description: >-
+              s3cmd host_bucket address. If a custom port is used, it can be appended with the parameter `port`.
+          use_versitygw:
+            type: "bool"
+            default: false
+            description: >-
+              For object storage backends that don't support native S3 and need VersityGW to proxy S3 requests.
+              Will deploy a versitygw@ systemd service listening on a local port that then can be used by s3cmd.
+          azure_account_name:
+            type: "str"
+            description: >-
+              Azure Account Name. Used with VersityGW.
+          azure_access_key:
+            type: "str"
+            description: >-
+              Azure Access Key. Used with VersityGW.
+          device_settings:
+            type: "dict"
+            description: >-
+              Settings for the S3 backend that will be applied in the Bareos Device config as "Device Options".
+              Default settings are based on https://github.com/bareos/bareos/discussions/2063.
+            options:
+              iothreads:
+                type: "int"
+                default: 4
+              ioslots:
+                type: "int"
+                default: 2
+              chunksize:
+                type: "int"
+                default: 262146024
+              device_program:
+                type: "str"
+                default: "s3cmd-wrapper.sh"

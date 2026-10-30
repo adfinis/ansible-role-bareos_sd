@@ -1,0 +1,9 @@
+{{ ansible_managed | comment }}
+VGW_BACKEND={{ item.vgw_backend | default('azure') }}
+VGW_PORT=:{{ item.port }}
+ROOT_ACCESS_KEY_ID={{ item.access_key }}
+ROOT_SECRET_ACCESS_KEY={{ item.secret_key }}
+{% if item.vgw_backend | default('azure') | lower == 'azure' %}
+AZURE_ACCOUNT_NAME={{ item.azure_account_name }}
+AZURE_ACCESS_KEY={{ item.azure_access_key }}
+{% endif %}
