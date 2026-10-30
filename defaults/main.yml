@@ -42,3 +42,4 @@ bareos_sd_s3_backends: []
 # Settings for Object Storage on Azure with VersityGW to translate S3 to Azure Blob Storage
 bareos_sd_s3_versitygw_version: 1.10.0
 bareos_sd_s3_versitygw_arch: amd64
+bareos_sd_s3_versitygw_download_url: "https://github.com/versity/versitygw/releases/download/v{{ bareos_sd_s3_versitygw_version }}/versitygw_{{ bareos_sd_s3_versitygw_version }}_linux_{{ bareos_sd_s3_versitygw_arch }}"
