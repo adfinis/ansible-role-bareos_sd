@@ -97,8 +97,7 @@ argument_specs:
         type: "str"
         description: "VersityGW download URL. Only used when VersityGW is enabled with `bareos_sd_s3_use_versitygw`."
         default: >-
-          https://github.com/versity/versitygw/releases/download/v{{ bareos_sd_s3_versitygw_version }}/
-          versitygw_{{ bareos_sd_s3_versitygw_version }}_linux_{{ bareos_sd_s3_versitygw_arch }}
+          https://github.com/versity/versitygw/releases/download/v{{ bareos_sd_s3_versitygw_version }}/versitygw_{{ bareos_sd_s3_versitygw_version }}_linux_{{ bareos_sd_s3_versitygw_arch }}
 
       bareos_sd_s3_backends:
         default: []
