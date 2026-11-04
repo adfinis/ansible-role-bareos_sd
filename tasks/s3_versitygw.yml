@@ -39,5 +39,6 @@
     enabled: "{{ item.enabled | default(true) }}"
     state: "{{ item.enabled | default(true) | ternary('started', 'stopped') }}"
   loop: "{{ bareos_sd_s3_backends }}"
+  ignore_errors: "{{ ansible_check_mode }}"
   when:
     - item.use_versitygw | default(false)
