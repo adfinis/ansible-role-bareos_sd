@@ -1,6 +1,6 @@
 {{ ansible_managed | comment }}
 VGW_BACKEND={{ item.vgw_backend | default('azure') }}
-VGW_PORT=:{{ item.port }}
+VGW_PORT=127.0.0.1:{{ item.port }}
 ROOT_ACCESS_KEY_ID={{ item.access_key }}
 ROOT_SECRET_ACCESS_KEY={{ item.secret_key }}
 {% if item.vgw_backend | default('azure') | lower == 'azure' %}
