@@ -104,6 +104,7 @@
   when:
     - bareos_sd_s3_backends is defined
     - bareos_sd_s3_backends is iterable
+    - bareos_sd_s3_backends | length > 0
 
 - name: Start and enable bareos-sd service
   ansible.builtin.service:
