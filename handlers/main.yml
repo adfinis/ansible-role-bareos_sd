@@ -9,3 +9,13 @@
   ansible.builtin.service:
     name: bareos-sd
     state: restarted
+
+- name: Restart VersityGw
+  ansible.builtin.service:
+    name: "versitygw@{{ item.name }}"
+    state: restarted
+  loop: "{{ bareos_sd_s3_backends }}"
+  ignore_errors: "{{ ansible_check_mode }}"
+  when:
+    - item.use_versitygw | default(false)
+    - item.enabled | default(true)

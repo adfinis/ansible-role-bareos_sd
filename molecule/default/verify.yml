@@ -5,6 +5,9 @@
   gather_facts: false
 
   tasks:
+    - name: Gather service facts
+      ansible.builtin.service_facts:
+
     - name: Check if port 9103 is listening
       ansible.builtin.wait_for:
         port: 9103
@@ -16,3 +19,12 @@
       register: bareos_sd_test_config
       failed_when:
         - bareos_sd_test_config.stdout_lines is search("There are configuration warnings")
+
+    - name: s3 | Check VersityGW service
+      ansible.builtin.assert:
+        that:
+          - ansible_facts.services["versitygw@molecule_s3_azure.service"].state == "running"
+
+    - name: s3 | Check VersityGW port
+      ansible.builtin.wait_for:
+        port: 7002
